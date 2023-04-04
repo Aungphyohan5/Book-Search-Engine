@@ -35,3 +35,23 @@ query User($userId: ID!) {
     }
   }`
 
+
+export const QUERY_ME = gql`
+  query Me {
+    me {
+      _id
+      username
+      email
+      password
+      savedBooks {
+        _id
+        title
+        authors
+        description
+        image
+        link
+      }
+    }
+  }
+  `
+
