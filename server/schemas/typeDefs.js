@@ -15,7 +15,7 @@ type User {
     username: String!
     email: String!
     password: String!
-    savedBooks: [Book!]!
+    savedBooks: [Book]
 }
 
 type Query {
@@ -44,7 +44,7 @@ type Mutation {
         title: String,
         image: String, 
         link: String ): User
-    deleteBook(userId: ID!, bookId: ID!): User
+    deleteBook(bookId: ID!): User
 }
 
 `;
