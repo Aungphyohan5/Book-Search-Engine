@@ -7,11 +7,6 @@ import { removeBookId } from '../utils/localStorage';
 
 
 
-
-
-import { getMe, deleteBook } from '../utils/API';
-
-
 const SavedBooks = () => {
   const { loading, data } = useQuery(QUERY_ME);
   const [deleteBook, { error }] = useQuery(DELETE_BOOK);
@@ -27,25 +22,21 @@ const SavedBooks = () => {
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      await deleteBook({
+        variables: { bookId },
+      })
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
       removeBookId(bookId);
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
     }
-  };
-
-  // if data isn't here yet, say so
-  if (!userDataLength) {
-    return <h2>LOADING...</h2>;
   }
+
+  if (loading) {
+    return <h1>LOADING...</h1>;
+  }
+
+
 
   return (
     <>
