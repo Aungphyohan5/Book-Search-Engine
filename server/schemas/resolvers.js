@@ -1,22 +1,16 @@
-const { Book, User } = require('../models/index')
+const { User } = require('../models')
 const { signToken } = require('../utils/auth')
 const { AuthenticationError } = require('apollo-server-express');
 
 const resolvers = {
     Query: {
 
-        users: async () => {
-            return User.find().populate('saveBooks');
-        },
-
-
-        user: async (parent, { username }) => {
-            return User.findOne({ username }).populate('saveBooks');
-        },
-
         me: async (parent, args, context) => {
             if (context.user) {
-                return User.findOne({ _id: context.user._id }).populate('saveBooks');;
+                const userData = await User.findOne({ _id: context.user._id })
+                    .select("-__v -password")
+                    .populate("books");
+                return userData;
             }
             throw new AuthenticationError('You need to be logged in!')
         }
@@ -24,10 +18,10 @@ const resolvers = {
 
 
     Mutation: {
-        createUser: async (parent, { username, email, password }) => {
-            const newUser = await User.create({ username, email, password })
+        createUser: async (parent, args) => {
+            const newUser = await User.create(args);
             const token = signToken(newUser);
-            return (token, newUser);
+            return { token, newUser };
         },
 
         login: async (parent, { email, password }) => {
@@ -46,37 +40,35 @@ const resolvers = {
             return { token, user };
         },
 
-        saveBook: async (parent, { bookId, authors, description, title, image, link }, context) => {
+        saveBook: async (parent, { bookData }, context) => {
             if (context.user) {
-                return await User.findByIdAndUpdate(
+                const updatedUser = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     {
-                        $addToSet: {
-                            saveBooks: { bookId, authors, description, title, image, link }
-                        },
+                        $addToSet:
+                            { savedBooks: bookData }
                     },
                     {
                         new: true,
                         runValidators: true,
                     }
-                ).populate('saveBooks')
+                ).populate("books");
+                return updatedUser;
             }
             throw new AuthenticationError('you need to be logged in!')
         },
 
         deleteBook: async (parent, { bookId }, context) => {
             if (context.user) {
-                const updatedUser = await User.findByIdAndDelete(
-                    context.user._id,
-                    { $pull: { saveBooks: { bookId } } },
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: context.user._id },
+                    { $pull: { savedBooks: { bookId } } },
                     { new: true },
 
-                ).populate('savedBooks');
+                );
                 return updatedUser
-            } else {
-                throw new AuthenticationError('You need to be logged in!');
             }
-
+            throw new AuthenticationError('You need to be logged in!');
         },
     }
 }
