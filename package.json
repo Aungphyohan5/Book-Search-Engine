@@ -2,7 +2,7 @@
   "name": "book-search-engine",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js --ignore client",
     "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
