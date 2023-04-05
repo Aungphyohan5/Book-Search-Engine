@@ -1,13 +1,10 @@
 {
-  "homepage": "https://aungphyohan5.github.io/book-search-engine",
   "name": "book-search-engine",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "start": "node server/server.js --ignore client",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "develop": "concurrently \"cd server && npm run dev\" \"cd client && npm start\"",
     "install": "cd server && npm i && cd ../client && npm i",
     "seed": "cd server && npm run seed",
