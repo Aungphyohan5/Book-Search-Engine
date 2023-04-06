@@ -64,10 +64,10 @@ Deployed Url  - https://book-search-engine-aph.herokuapp.com/
 
 
 - CSS
-- [React-Bootstrap] (https://react-bootstrap.github.io/)
+- [React-Bootstrap](https://react-bootstrap.github.io/)
 - JavaScript
-- [Node.js] (https://nodejs.org/en)
-- [React.js] (https://react.dev/)
+- [Node.js](https://nodejs.org/en)
+- [React.js](https://react.dev/)
 - [Express.js](https://expressjs.com/)
 - [@apollo/client](https://www.npmjs.com/package/@apollo/client)
 - [apollo-server-express](https://www.npmjs.com/package/apollo-server-express)
